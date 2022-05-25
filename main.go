@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"iteration-backend/service"
+
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -15,6 +17,7 @@ type JwtClaims struct {
 }
 
 func main() {
+	fmt.Println(service.GenerateToken("123"))
 	e := echo.New()
 
 	// Middleware

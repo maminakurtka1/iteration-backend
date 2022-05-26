@@ -1,0 +1,4 @@
+{
+    "jwt_key": "iteration-api",
+    "port": 1234
+}

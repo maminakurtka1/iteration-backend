@@ -9,6 +9,13 @@ require (
 )
 
 require (
+	github.com/ghodss/yaml v1.0.0 // indirect
+	github.com/pkg/errors v0.8.1 // indirect
+	github.com/tkanos/gonfig v0.0.0-20210106201359-53e13348de2f // indirect
+)
+
+require (
+	github.com/apex/log v1.9.0
 	github.com/asppj/goconfig v0.1.0 // indirect
 	github.com/labstack/gommon v0.3.1 // indirect
 	github.com/mattn/go-colorable v0.1.11 // indirect

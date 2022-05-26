@@ -34,13 +34,23 @@ func ParseToken(tokenString string) (*jwt.Token, error) {
 	return tkn, err
 }
 
-func RefreshToken(tokenString string) {
+func RefreshToken(tokenString string) (string, error) {
 	claims := &tokenClaims{}
 	tkn, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 		return jwtKey, nil
 	})
+	if err != nil {
+		if err == jwt.ErrSignatureInvalid {
+			return
+		}
+		return
+	}
+	if !tkn.Valid {
+		return
+	}
 	expirationTime := time.Now().Add(5 * time.Minute)
 	claims.ExpiresAt = expirationTime.Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	tokenString, err := token.SignedString(jwtKey)
+	tokenString, err = token.SignedString(jwtKey)
+	return tokenString, err
 }

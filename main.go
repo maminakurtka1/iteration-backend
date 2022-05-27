@@ -14,7 +14,6 @@ func main() {
 	// Middleware
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
-
 	// Login route
 	// e.GET("/login", login)
 	e.Logger.Fatal(e.Start(":1323"))

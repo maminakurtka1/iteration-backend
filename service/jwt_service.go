@@ -26,27 +26,31 @@ func GenerateToken(account_uuid string) (string, error) {
 	return tokenString, err
 }
 
-func ParseToken(tokenString string) (*jwt.Token, error) {
-	claims := &tokenClaims{}
-	tkn, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
-		return jwtKey, nil
-	})
-	return tkn, err
-}
-
-func RefreshToken(tokenString string) (string, error) {
+func ParseToken(tokenString string) (*tokenClaims, error) {
 	claims := &tokenClaims{}
 	tkn, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 		return jwtKey, nil
 	})
 	if err != nil {
 		if err == jwt.ErrSignatureInvalid {
-			return
+			return claims, err
 		}
-		return
+		return claims, err
 	}
 	if !tkn.Valid {
-		return
+		return claims, err
+	}
+	return claims, err
+}
+
+func RefreshToken(tokenString string) (string, error) {
+	claims, err := ParseToken(tokenString)
+	if err != nil {
+		return "", err
+	}
+
+	if time.Until(time.Unix(claims.ExpiresAt, 0)) >= 30*time.Second {
+		return "claims", err
 	}
 	expirationTime := time.Now().Add(5 * time.Minute)
 	claims.ExpiresAt = expirationTime.Unix()

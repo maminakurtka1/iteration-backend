@@ -1,7 +1,7 @@
 package main
 
 import (
-	"iteration-backend/controller"
+	"iteration-backend/handler"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -13,8 +13,8 @@ func setupRouter() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	e.POST("/sign-up", controller.SignUp)
-	e.GET("/sigh-in", controller.SignIn)
+	e.POST("/sign-up", handler.SignUp)
+	e.GET("/sigh-in", handler.SignIn)
 
 	e.Logger.Fatal(e.Start(":1323"))
 }

@@ -3,6 +3,7 @@ package handler
 import (
 	"iteration-backend/database"
 	"iteration-backend/dto"
+	"iteration-backend/service"
 	"iteration-backend/tools"
 	"net/http"
 
@@ -45,5 +46,9 @@ func SignIn(c echo.Context) error {
 	if err != nil || uuid == "" {
 		return c.JSON(http.StatusBadRequest, echo.Map{"error": err})
 	}
-	return c.JSON(http.StatusCreated, echo.Map{"uuid": uuid})
+	token, err := service.GenerateToken(uuid)
+	if err != nil {
+		return c.NoContent(http.StatusInternalServerError)
+	}
+	return c.JSON(http.StatusAccepted, echo.Map{"token": token})
 }

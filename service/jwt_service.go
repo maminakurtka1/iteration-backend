@@ -1,6 +1,7 @@
 package service
 
 import (
+	"log"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -8,21 +9,24 @@ import (
 
 type tokenClaims struct {
 	jwt.StandardClaims
-	AccountUUID string `json:"accoount_uuid"`
+	AccountId string `json:"accoount_id"`
 }
 
 var jwtKey = []byte("my_secret_key")
 
-func GenerateToken(account_uuid string) (string, error) {
+func GenerateToken(account_id string) (string, error) {
 	claims := &tokenClaims{
-		AccountUUID: account_uuid,
+		AccountId: account_id,
 		StandardClaims: jwt.StandardClaims{
 			// In JWT, the expiry time is expressed as unix milliseconds
-			ExpiresAt: time.Now().Add(5 * time.Minute).Unix(),
+			ExpiresAt: time.Now().Add(10 * time.Minute).Unix(),
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString(jwtKey)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return tokenString, err
 }
 

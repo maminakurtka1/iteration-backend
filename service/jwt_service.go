@@ -1,8 +1,9 @@
 package service
 
 import (
-	"log"
 	"time"
+
+	"github.com/apex/log"
 
 	"github.com/dgrijalva/jwt-go"
 )
@@ -25,7 +26,7 @@ func GenerateToken(account_id string) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString(jwtKey)
 	if err != nil {
-		log.Fatal(err)
+		log.WithError(err).Error("Can't create new token!")
 	}
 	return tokenString, err
 }
@@ -37,11 +38,14 @@ func ParseToken(tokenString string) (*tokenClaims, error) {
 	})
 	if err != nil {
 		if err == jwt.ErrSignatureInvalid {
+			log.WithError(err).Error("Can't parse token!")
 			return claims, err
 		}
+		log.WithError(err).Error("Can't parse token!")
 		return claims, err
 	}
 	if !tkn.Valid {
+		log.WithError(err).Error("Not valid token!")
 		return claims, err
 	}
 	return claims, err
@@ -54,11 +58,15 @@ func RefreshToken(tokenString string) (string, error) {
 	}
 
 	if time.Until(time.Unix(claims.ExpiresAt, 0)) >= 30*time.Second {
-		return "claims", err
+		log.WithError(err).Error("Not valid token!")
+		return "", err
 	}
-	expirationTime := time.Now().Add(5 * time.Minute)
+	expirationTime := time.Now().Add(10 * time.Minute)
 	claims.ExpiresAt = expirationTime.Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err = token.SignedString(jwtKey)
+	if err != nil {
+		log.WithError(err).Error("Can't recreate token!")
+	}
 	return tokenString, err
 }

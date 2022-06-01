@@ -5,16 +5,41 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	_ "github.com/rizalgowandy/go-swag-sample/docs/echosimple"
+	echoSwagger "github.com/swaggo/echo-swagger"
 )
+
+// @title Echo Swagger Iteration API
+// @version 1.0
+// @description This is an API for Iteration project.
+// @termsOfService http://swagger.io/terms/
+
+// @contact.name API Support
+// @contact.url http://www.swagger.io/support
+// @contact.email support@swagger.io
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+
+// @host localhost:3000
+// @BasePath /
+// @schemes http
 
 func setupRouter() {
 	e := echo.New()
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	e.Use(middleware.CORS())
+
+	// Routes
+	e.GET("/", handler.MainPage)
 
 	e.POST("/sign-up", handler.SignUp)
-	e.GET("/sigh-in", handler.SignIn)
+	e.GET("/sign-in", handler.SignIn)
 
-	e.Logger.Fatal(e.Start(":1323"))
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
+
+	// Start server
+	e.Logger.Fatal(e.Start(":3000"))
 }

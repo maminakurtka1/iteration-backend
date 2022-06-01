@@ -2,10 +2,10 @@ package database
 
 import (
 	"context"
-	"fmt"
 	"iteration-backend/dto"
 	"iteration-backend/tools"
-	"os"
+
+	"github.com/apex/log"
 )
 
 func CreateAccount(account *dto.AccountSignUp) (string, error) {
@@ -15,16 +15,19 @@ func CreateAccount(account *dto.AccountSignUp) (string, error) {
 	row := conn.QueryRow(ctx, "INSERT INTO accounts (id, inserted_at, updated_at) VALUES (DEFAULT, DEFAULT, DEFAULT) RETURNING id")
 	var account_id string
 	if err := row.Scan(&account_id); err != nil {
-		fmt.Fprintf(os.Stderr, "Can't create new account: %v\n", err)
+		log.WithError(err).Error("Can't create new account!")
+		return account_id, err
 	}
 	password_hash, err := tools.HashPassword(account.Password)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Can't hash password: %v\n", err)
+		log.WithError(err).Error("Can't create new account!")
+		return account_id, err
 	}
 	row = conn.QueryRow(ctx, "INSERT INTO account_identities (id, account_id, inserted_at, updated_at, phone_number, email, password_hash) VALUES (DEFAULT, $1, DEFAULT, DEFAULT, $2, $3, $4) RETURNING id", account_id, account.Phone, account.Email, password_hash)
 	var id int
 	if err := row.Scan(&id); err != nil {
-		fmt.Fprintf(os.Stderr, "Can't create new account: %v\n", err)
+		log.WithError(err).Error("Can't create new account!")
+		return account_id, err
 	}
 	return account_id, err
 }
@@ -38,7 +41,8 @@ func SignIn(account *dto.AccountSignIn) (string, error) {
 	var id string
 	var password_hash string
 	if err := row.Scan(&id, &password_hash); err != nil {
-		fmt.Fprintf(os.Stderr, "Can't find user: %v\n", err)
+		log.WithError(err).Error("Can't find user!")
+		return "", err
 	}
 	if tools.CheckPasswordHash(account.Password, password_hash) {
 		return id, nil

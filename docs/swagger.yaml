@@ -1,0 +1,47 @@
+basePath: /
+host: localhost:3000
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is an API for Iteration project.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Echo Swagger Iteration API
+  version: "1.0"
+paths:
+  /:
+    get:
+      consumes:
+      - '*/*'
+      description: get the status of server.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Show the status of server.
+      tags:
+      - root
+  /sign-up:
+    post:
+      consumes:
+      - '*/*'
+      description: Create new account.
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: ""
+      summary: Sign up new user.
+      tags:
+      - root
+schemes:
+- http
+swagger: "2.0"

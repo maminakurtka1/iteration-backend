@@ -1,10 +1,15 @@
 package main
 
 import (
-	"iteration-backend/config"
+	"context"
+	// "iteration-backend/config"
+	"iteration-backend/database"
 )
 
+// cfg := config.LoadConfig()
+
 func main() {
-	config.LoadConfig()
-	setupRouter()
+	ctx := context.Background()
+	db := database.OpenConnect(ctx)
+	setupRouter(db)
 }

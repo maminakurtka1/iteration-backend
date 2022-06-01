@@ -35,7 +35,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "root"
+                    "main_page"
                 ],
                 "summary": "Show the status of server.",
                 "responses": {
@@ -53,13 +53,13 @@ const docTemplate = `{
             "post": {
                 "description": "Create new account.",
                 "consumes": [
-                    "*/*"
+                    "*/sign-up*"
                 ],
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "root"
+                    "authorize"
                 ],
                 "summary": "Sign up new user.",
                 "responses": {

@@ -3,9 +3,11 @@ package main
 import (
 	"iteration-backend/handler"
 
+	_ "iteration-backend/docs"
+
+	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	_ "github.com/rizalgowandy/go-swag-sample/docs/echosimple"
 	echoSwagger "github.com/swaggo/echo-swagger"
 )
 
@@ -25,7 +27,7 @@ import (
 // @BasePath /
 // @schemes http
 
-func setupRouter() {
+func setupRouter(db *pgxpool.Pool) {
 	e := echo.New()
 
 	e.Use(middleware.Logger())
@@ -35,8 +37,8 @@ func setupRouter() {
 	// Routes
 	e.GET("/", handler.MainPage)
 
-	e.POST("/sign-up", handler.SignUp)
-	e.GET("/sign-in", handler.SignIn)
+	e.POST("/sign-up", handler.SignUp(db))
+	e.GET("/sign-in", handler.SignIn(db))
 
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 

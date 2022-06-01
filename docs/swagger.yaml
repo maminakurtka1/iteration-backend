@@ -28,11 +28,11 @@ paths:
             type: object
       summary: Show the status of server.
       tags:
-      - root
+      - main_page
   /sign-up:
     post:
       consumes:
-      - '*/*'
+      - '*/sign-up*'
       description: Create new account.
       produces:
       - application/json
@@ -41,7 +41,7 @@ paths:
           description: ""
       summary: Sign up new user.
       tags:
-      - root
+      - authorize
 schemes:
 - http
 swagger: "2.0"

@@ -6,11 +6,11 @@ import (
 	"iteration-backend/tools"
 
 	"github.com/apex/log"
+	"github.com/jackc/pgx/v4/pgxpool"
 )
 
-func CreateAccount(account *dto.AccountSignUp) (string, error) {
+func CreateAccount(conn *pgxpool.Pool, account *dto.AccountSignUp) (string, error) {
 	ctx := context.Background()
-	conn := openConnect(ctx)
 	defer conn.Close()
 	row := conn.QueryRow(ctx, "INSERT INTO accounts (id, inserted_at, updated_at) VALUES (DEFAULT, DEFAULT, DEFAULT) RETURNING id")
 	var account_id string
@@ -32,9 +32,8 @@ func CreateAccount(account *dto.AccountSignUp) (string, error) {
 	return account_id, err
 }
 
-func SignIn(account *dto.AccountSignIn) (string, error) {
+func SignIn(conn *pgxpool.Pool, account *dto.AccountSignIn) (string, error) {
 	ctx := context.Background()
-	conn := openConnect(ctx)
 	defer conn.Close()
 
 	row := conn.QueryRow(ctx, "SELECT account_id, password_hash FROM account_identities WHERE phone_number=$1", account.Phone)

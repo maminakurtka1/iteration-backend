@@ -37,9 +37,14 @@ func setupRouter(db *pgxpool.Pool) {
 	// Routes
 	e.GET("/", handler.MainPage)
 
+	// Authorize scope
 	e.POST("/sign-up", handler.SignUp(db))
 	e.GET("/sign-in", handler.SignIn(db))
 
+	// CV scope
+	e.POST("/create-cv", handler.CreateCv(db))
+
+	// Swagger
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	// Start server
